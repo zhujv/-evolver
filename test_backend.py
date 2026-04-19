@@ -1,0 +1,14 @@
+import urllib.request
+import json
+
+req = urllib.request.Request(
+    'http://localhost:16888/rpc',
+    data=json.dumps({"method": "health", "params": {}, "id": 1}).encode(),
+    headers={'Content-Type': 'application/json'}
+)
+
+try:
+    resp = urllib.request.urlopen(req, timeout=5)
+    print("Response:", resp.read().decode())
+except Exception as e:
+    print("Error:", e)

@@ -1,0 +1,36 @@
+[project]
+name = "evolver"
+version = "0.1.0"
+description = "可进化的AI编程助手"
+authors = [{ name = "Your Name", email = "your.email@example.com" }]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+  "openai~=1.0.0",
+  "anthropic~=0.18.0",
+  "httpx~=0.25.0",
+  "pydantic~=2.0.0",
+  "rich~=13.0.0",
+  "prompt-toolkit~=3.0.0",
+  "sqlite-utils~=3.35.0",
+  "pyyaml~=6.0.0",
+  "python-dotenv~=1.0.0",
+  "msgpack~=1.0.0",
+  "usearch~=2.23.0",
+  "cryptography~=41.0.0",
+  "tiktoken~=0.5.0",
+  "docker~=6.0.0",
+  "psutil~=5.9.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+evolver = ["*.py"]
+
+[tool.setuptools.packages.find]
+where = ["evolver"]

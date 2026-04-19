@@ -1,0 +1,44 @@
+# Evolver Backend Dockerfile
+FROM python:3.11-slim
+
+LABEL maintainer="Evolver Team"
+LABEL description="Evolver AI Agent Backend"
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements file
+COPY evolver/requirements.txt /app/evolver/requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /app/evolver/requirements.txt
+
+# Copy application code
+COPY evolver/ /app/evolver/
+
+# Create non-root user
+RUN useradd -m -u 1000 evolver && \
+    chown -R evolver:evolver /app
+
+USER evolver
+
+# Environment variables
+ENV PYTHONPATH=/app
+ENV EVOLVER_HOST=0.0.0.0
+ENV EVOLVER_PORT=16888
+ENV EVOLVER_SERVER_TOKEN=
+
+# Expose port
+EXPOSE 16888
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:16888/rpc || exit 1
+
+# Run the application
+CMD ["python", "-m", "evolver.server"]

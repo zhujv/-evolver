@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # Backend API Server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: evolver-backend
+    ports:
+      - "16888:16888"
+    environment:
+      - EVOLVER_HOST=0.0.0.0
+      - EVOLVER_PORT=16888
+      - EVOLVER_SERVER_TOKEN=${EVOLVER_SERVER_TOKEN:-}
+      - EVOLVER_API_BASE=${EVOLVER_API_BASE:-}
+      - EVOLVER_API_KEY=${EVOLVER_API_KEY:-}
+      - EVOLVER_PROXY_TYPE=${EVOLVER_PROXY_TYPE:-openai}
+    volumes:
+      - evolver-config:/home/evolver/.evolver
+      - evolver-data:/home/evolver/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:16888/rpc"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - evolver-network
+
+  # Frontend Web Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: evolver-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_EVOLVER_RPC_URL=http://localhost:16888
+    restart: unless-stopped
+    networks:
+      - evolver-network
+
+  # Vector Database (Milvus Lite for local development)
+  # Uncomment if you need a persistent vector database
+  # milvus:
+  #   image: milvusdb/milvus:v3.0.0
+  #   container_name: evolver-milvus
+  #   ports:
+  #     - "19530:19530"
+  #     - "9091:9091"
+  #   environment:
+  #     - ETCD_USE_EMBED=true
+  #     - COMMON_STORAGETYPE=local
+  #   volumes:
+  #     - milvus-data:/var/lib/milvus
+  #   restart: unless-stopped
+  #   networks:
+  #     - evolver-network
+
+networks:
+  evolver-network:
+    driver: bridge
+
+volumes:
+  evolver-config:
+    driver: local
+  evolver-data:
+    driver: local
+  # milvus-data:
+  #   driver: local

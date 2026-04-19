@@ -1,0 +1,107 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Rust / Tauri build artifacts
+frontend/src-tauri/target/
+
+# IDE & Editor
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Evolver specific
+.evolver/
+memory/
+.workbuddy/
+
+# Local secrets (copy from .env.example)
+.env
+frontend/.env.local
+
+# Build artifacts
+*.egg-info/
+*.spec
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+
+# Temporary / Debug files
+*.bak
+*.out.txt
+*.err.txt
+debug-*.log
+test_bob*.py
+test_server[0-9]*.py
+fix_server*.py
+stress_test*.py
+evolver/server.py.bak
+*.exe
+
+# Chinese path skill files (development only)
+智能体/
+znt/
+
+# Misc development files
+evolver_logo.html
+monitor_performance.py
+fix_server.py
+fix_server2.py
+run_server.py
+UI_REQUIREMENTS.md
+Evolver项目介绍.md
+GitHub开源报告.md
+
+# Temporary test scripts
+test_bob*.py
+test_server[0-9]*.py
+test_16888.py
+test_api_config.py
+test_api_config_bob.py
+test_backend.py
+test_chat.py
+test_chat_auth.py
+test_cli.py
+test_connect.py
+test_http.py
+test_server.py
+test_terminal.py

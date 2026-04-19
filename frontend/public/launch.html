@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Evolver 启动台</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+        --bg: #0f1419;
+        --card: #1a2332;
+        --accent: #3d9cf9;
+        --text: #e8eef5;
+        --muted: #8b9cb3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: radial-gradient(1200px 600px at 50% -20%, #1e3a5f 0%, var(--bg) 55%);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .shell {
+        width: min(440px, 100%);
+        background: var(--card);
+        border-radius: 16px;
+        padding: 28px 26px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+      }
+      p.lead {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.5;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px;
+        font-size: 0.88rem;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #666;
+        flex-shrink: 0;
+      }
+      .dot.ok {
+        background: #3ecf8e;
+        box-shadow: 0 0 10px rgba(62, 207, 142, 0.5);
+      }
+      .dot.bad {
+        background: #f06b6b;
+      }
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      a.btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 12px 16px;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #0a0f14;
+      }
+      a.btn.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .foot {
+        margin-top: 18px;
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <h1>Evolver 启动台</h1>
+      <p class="lead">网页模式：不依赖桌面 exe。请先用仓库根的 <code>python start.py</code> 拉起后端与 Vite。</p>
+      <div class="row">
+        <span>后端 JSON-RPC</span>
+        <span id="be" class="dot" title="检测中"></span>
+      </div>
+      <div class="row">
+        <span>本页（Vite）</span>
+        <span id="fe" class="dot ok" title="已加载"></span>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/">进入主界面</a>
+        <a class="btn secondary" href="/" target="_self" rel="noopener">刷新检测</a>
+      </div>
+      <p class="foot">若后端红点：在仓库根执行 <code>.venv\Scripts\python.exe -m evolver.server</code>（或重新运行 <code>python start.py</code>）。端口 16888。</p>
+    </div>
+    <script>
+      (async function () {
+        var el = document.getElementById("be");
+        try {
+          var body = JSON.stringify({ method: "health", params: {}, id: 1 });
+          var r = await fetch("/rpc", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: body,
+          });
+          var t = await r.text();
+          var ok = t.indexOf('"result"') !== -1 || (t.indexOf('"error"') !== -1 && t.indexOf('"id"') !== -1);
+          el.className = "dot " + (ok ? "ok" : "bad");
+          el.title = ok ? "后端可用" : "响应异常";
+        } catch (e) {
+          el.className = "dot bad";
+          el.title = String(e);
+        }
+      })();
+    </script>
+  </body>
+</html>
